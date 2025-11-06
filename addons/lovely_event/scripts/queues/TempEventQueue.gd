@@ -14,4 +14,4 @@ func update( _dt : float ) -> void:
 func can_i_delete_myself_now() -> void:
 	if has_had_an_event and is_empty:
 		# I WAS MADE FOR THIIIIIS!!
-		EventSystem.remove_queue( self );
+		LovelyEvent.remove_queue( self );

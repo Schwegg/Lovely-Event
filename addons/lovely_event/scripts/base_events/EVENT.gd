@@ -10,7 +10,7 @@ extends RefCounted
 ## event.queue( example_event_queue );
 ## [/codeblock]
 ## [code]example_event_queue[/code] can be [Null] as well to send to
-## default queue, [member EventSystem.main_queue].
+## default queue, [member LovelyEvent.main_queue].
 class_name EVENT
 
 ## return type for [method execute] function.
@@ -30,12 +30,12 @@ func _init() -> void:
 ## [codeblock]
 ## EVENT_Example.new().queue();
 ## [/codeblock]
-## or can be queued via [EventSystem] directly eg.
+## or can be queued via [LovelyEvent] directly eg.
 ## [codeblock]
-## EventSystem.queue( EVENT_Example.new(), example_event_queue );
+## LovelyEvent.queue( EVENT_Example.new(), example_event_queue );
 ## [/codeblock]
 func queue( event_queue : EventQueue = null ) -> void:
-	EventSystem.queue( self, event_queue );
+	LovelyEvent.queue( self, event_queue );
 
 
 ## automatically called function to execute the event.

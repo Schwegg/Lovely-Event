@@ -1,18 +1,18 @@
 extends RefCounted
 ## a queue for events.[br]
-## [color=red]WARNING[/color]: [method EventSystem.update] is automatically called
-## via [EventSystem] global singleton.
+## [color=red]WARNING[/color]: [method LovelyEvent.update] is automatically called
+## via [LovelyEvent] global singleton.
 class_name EventQueue
 
 var name : String = ""; ## name/ID of [EventQueue].
 var is_empty : bool = true; ## shows if [member event_queue] is empty.
 var is_looping : bool = false; ## if current event within queue is being run for more than one [method _process].
 var is_running : bool = false; ## shows whether [EVENT]s are being run in this queue or not.
-var is_essential : bool = false; ## cannot be deleted via [method EventSystem.delete_queue] if true.
+var is_essential : bool = false; ## cannot be deleted via [method LovelyEvent.delete_queue] if true.
 var event_queue : Array[ EVENT ] = []; ## queue for events.
 
 var ignore_main_queue : bool = false; ## sets whether queue runs along-side the main queue or not.
-var runs_while_paused : bool = false; ## sets whether queue runs while [EventSystem] is paused.
+var runs_while_paused : bool = false; ## sets whether queue runs while [LovelyEvent] is paused.
 
 ## checks this [Array] of [Callable]s before updating.[br]
 ## see: [method EventQueue.add_update_check].
@@ -22,8 +22,8 @@ var extra_checks : Array[Callable] = [];
 func _init( queue_name : String, run_while_paused : bool = false ) -> void:
 	name = queue_name;
 	runs_while_paused = run_while_paused;
-	if not EventSystem.queue_list.has( queue_name ):
-		EventSystem.queue_list[queue_name] = self;
+	if not LovelyEvent.queue_list.has( queue_name ):
+		LovelyEvent.queue_list[queue_name] = self;
 	else:
 		push_error( "EventQueue \"",name,"\" already exists! try a different name!" );
 
@@ -47,14 +47,14 @@ func check_can_update() -> bool:
 
 ## internal check for [method EventQueue.check_can_update].
 func check_main_queue_check() -> bool:
-	if ignore_main_queue or ( not ignore_main_queue and not EventSystem.main_queue.is_running ):
+	if ignore_main_queue or ( not ignore_main_queue and not LovelyEvent.main_queue.is_running ):
 		return true;
 	return false;
 
 
 ## internal check for [method EventQueue.check_can_update].
 func check_pause_check() -> bool:
-	if (not EventSystem.pause) or (runs_while_paused and EventSystem.pause):
+	if (not LovelyEvent.pause) or (runs_while_paused and LovelyEvent.pause):
 		return true;
 	return false;
 
@@ -63,9 +63,9 @@ func check_pause_check() -> bool:
 ## [codeblock]
 ## example_event_queue.queue( EVENT_Example.new() );
 ## [/codeblock]
-## or can be queued via [EventSystem] directly eg.
+## or can be queued via [LovelyEvent] directly eg.
 ## [codeblock]
-## EventSystem.queue( EVENT_Example.new(), example_event_queue );
+## LovelyEvent.queue( EVENT_Example.new(), example_event_queue );
 ## [/codeblock]
 func queue( event : EVENT ) -> void:
 	event_queue.append( event );
@@ -73,7 +73,7 @@ func queue( event : EVENT ) -> void:
 
 
 ## [color=red]Warning[/color]: do [b]NOT[/b] call this function, it is automatically
-## called automatically via [method EventSystem._process] function!
+## called automatically via [method LovelyEvent._process] function!
 func update( _dt : float ) -> void:
 	is_empty = event_queue.is_empty();
 	# checks if queue can update
@@ -104,7 +104,7 @@ func remove_event() -> void:
 		event_queue.remove_at( 0 );
 	is_empty = event_queue.is_empty();
 	if not event_queue.is_empty():
-		update( EventSystem.get_process_delta_time() );
+		update( LovelyEvent.get_process_delta_time() );
 
 
 ## removes specific event from the [member event_queue].

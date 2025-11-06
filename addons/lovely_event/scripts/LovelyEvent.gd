@@ -57,7 +57,7 @@ func queue( new_event : EVENT, event_queue : EventQueue = null ) -> void:
 		event_queue.queue( new_event );
 
 
-## does nothing by default. expected to be replaced via replacing [member EventSystem.default_queue_check].
+## does nothing by default. expected to be replaced via replacing [member LovelyEvent.default_queue_check].
 func default_queue_check_func( _new_event : EVENT ) -> bool:
 	return false;
 
