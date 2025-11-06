@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Lovely Event"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="uid://dsvl15bbruydc"
+config/icon="uid://d144be20fw7cg"
 
 [autoload]
 
