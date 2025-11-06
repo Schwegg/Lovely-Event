@@ -39,15 +39,10 @@ func _process( _dt : float ) -> void:
 		if not event_queue.is_running and not event_queue.is_empty:
 			event_queue.update( _dt );
 
-
-## alternatively can be called via [EVENT] eg.
-## [codeblock]
-## EVENT_Example.new().queue();
-## [/codeblock]
-## or can be queued via [EventQueue] eg.
-## [codeblock]
-## example_event_queue.queue( EVENT_Example.new() );
-## [/codeblock]
+## queues the [param new_event] into the given [param event_queue].
+## if no queue is given, calls [member LovelyEvent.default_queue_check] to
+## check for the default queue to send [param new_event] to, which is 
+## [member main_queue] by default.
 func queue( new_event : EVENT, event_queue : EventQueue = null ) -> void:
 	if queue == null:
 		var has_queued_event : bool = default_queue_check.call( new_event );

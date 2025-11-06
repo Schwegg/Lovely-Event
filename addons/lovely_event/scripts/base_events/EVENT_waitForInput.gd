@@ -1,10 +1,13 @@
 extends EVENT
+## waits for user input of given
 class_name EVENT_waitForInput
 
 var input : String
 
-func _init( check_input : String = "" ) -> void:
-	input = check_input;
+## checks for [param action], will not continue queue until [param action] is pressed.[br][br]
+## NOTE: if no [param action] is given, will check/accept any input.
+func _init( action : StringName = "" ) -> void:
+	input = action;
 	super._init();
 
 

@@ -1,10 +1,11 @@
 extends EVENT
+## waits X seconds before continuing queue.
 class_name EVENT_wait
 
-var wait_time : float = 0.0;
+var wait_time : float;
 
-
-func _init( time : float ) -> void:
+## waits [time] seconds before continuing queue.
+func _init( time : float = 1.0 ) -> void:
 	wait_time = time;
 	super._init();
 

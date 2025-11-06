@@ -28,7 +28,7 @@ func _init( queue_name : String, run_while_paused : bool = false ) -> void:
 		push_error( "EventQueue \"",name,"\" already exists! try a different name!" );
 
 
-## [Callable] must return bool.
+## [Callable] must return [code]bool[/code].
 ## used before the update process to check if queue should be updated.
 func add_update_check( check_func : Callable ) -> void:
 	extra_checks.append( check_func );
@@ -59,21 +59,14 @@ func check_pause_check() -> bool:
 	return false;
 
 
-## alternatively can be queued via [EventQueue] eg.
-## [codeblock]
-## example_event_queue.queue( EVENT_Example.new() );
-## [/codeblock]
-## or can be queued via [LovelyEvent] directly eg.
-## [codeblock]
-## LovelyEvent.queue( EVENT_Example.new(), example_event_queue );
-## [/codeblock]
+## adds [param event] to end of queue.
 func queue( event : EVENT ) -> void:
 	event_queue.append( event );
 	is_empty = false;
 
 
-## [color=red]Warning[/color]: do [b]NOT[/b] call this function, it is automatically
-## called automatically via [method LovelyEvent._process] function!
+## [b]HEY![/b] do [b]NOT[/b] call this function,
+## it's called automatically via [method LovelyEvent._process] function!
 func update( _dt : float ) -> void:
 	is_empty = event_queue.is_empty();
 	# checks if queue can update

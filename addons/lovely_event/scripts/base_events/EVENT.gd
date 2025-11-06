@@ -26,20 +26,14 @@ func _init() -> void:
 	EID = get_script().get_global_name();
 
 
-## alternatively can be called via [EVENT] eg.
-## [codeblock]
-## EVENT_Example.new().queue();
-## [/codeblock]
-## or can be queued via [LovelyEvent] directly eg.
-## [codeblock]
-## LovelyEvent.queue( EVENT_Example.new(), example_event_queue );
-## [/codeblock]
+## queues self into given [param event_queue].[br]
+## if no [param event_queue] is given, sends it to default queue ([member LovelyEvent.main_queue] by default).
 func queue( event_queue : EventQueue = null ) -> void:
 	LovelyEvent.queue( self, event_queue );
 
 
-## automatically called function to execute the event.
-## [color=red]do NOT call this function manually.[/color]
+## [b]automatically[/b] called function to execute the event.[br]
+## [b]do not call this function manually.[/b]
 func execute( _looping : bool, _dt : float ) -> RETURNTYPE:
 	# default event does nothing, if not overritten, will throw a fit.
 	push_error( EID," event does nothing!" );
