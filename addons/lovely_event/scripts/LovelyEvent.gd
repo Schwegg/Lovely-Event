@@ -62,4 +62,4 @@ func delete_queue( event_queue : EventQueue ) -> void:
 		event_queue.clear();
 		queue_list.erase( event_queue );
 	else:
-		push_error( "tried to remove/delete one of main queues, pls do not." );
+		push_error( "cannot delete essential event queue. if you want to delete this queue, set the queue's is_essential var to false." );
