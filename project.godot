@@ -16,7 +16,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-EventSystem="*res://addons/lovely_event/scripts/EventSystem.gd"
+LovelyEvent="*res://addons/lovely_event/scripts/LovelyEvent.gd"
 
 [editor_plugins]
 
