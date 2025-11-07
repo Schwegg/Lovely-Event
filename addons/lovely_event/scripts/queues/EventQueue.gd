@@ -19,9 +19,10 @@ var runs_while_paused : bool = false; ## sets whether queue runs while [LovelyEv
 var extra_checks : Array[Callable] = [];
 
 
-func _init( queue_name : String, run_while_paused : bool = false ) -> void:
+func _init( queue_name : String, run_while_paused : bool = false, run_while_main_queue_runs : bool = false ) -> void:
 	name = queue_name;
 	runs_while_paused = run_while_paused;
+	ignore_main_queue = run_while_main_queue_runs;
 	if not LovelyEvent.queue_list.has( queue_name ):
 		LovelyEvent.queue_list[queue_name] = self;
 	else:
@@ -81,17 +82,21 @@ func update( _dt : float ) -> void:
 			is_running = false;
 		elif event_return_type == EVENT.RETURNTYPE.FINISHED: # finished event
 			is_looping = false;
-			remove_event();
+			remove_top_event();
 		elif event_return_type == EVENT.RETURNTYPE.ERROR:
 			push_error( "error with event of ID \"",event_queue[0].EID,"\" in queue ",name );
 			is_looping = false;
-			remove_event();
+			remove_top_event();
+		else:
+			push_error( "EVENTs should always return an EVENT.RETURNTYPE! please do this!" );
+			is_looping = false;
+			remove_top_event();
 	else:
 		is_running = false;
 
 
 ## removes top event from the [member event_queue].
-func remove_event() -> void:
+func remove_top_event() -> void:
 	if not event_queue.is_empty():
 		event_queue[0].is_current_event = false;
 		event_queue.remove_at( 0 );
