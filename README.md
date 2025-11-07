@@ -6,7 +6,7 @@ A light-weight but flexible **event system** add-on for Godot based off my origi
 
 I've been using different itterations of this addon at the center of my projects since I started gamedev around 2017. it started as a
 Love2D script that I ported over to Godot and evolved over time into what it is now. My goal with this project is to help others with
-this addon. I hope this addon serves others like it has for me for so many years.
+this addon. I hope this addon serves others like it has for me for so many years.\
 (if you want to see my terrible original Love2D version, you can see it [here](https://github.com/Schwegg/Love2D-Lovely-Event/tree/main)!)
 
 ## How to Install
@@ -21,19 +21,19 @@ What is an "event system"? Well for this project it refers to a setup of three c
 2. `EventQueue` - a queue which holds events and manages the events within itself.
 3. `EVENT` - the individual events which populate the queues.
 
-These three components work together to create this plugin/addon.\
-`EVENT`s are executed in order and will "loop"/execute every `_process()` call if they aren't finished on first execution.
-once an `EVENT` returns "finished", it removes that event from the queue and executes the next event in the queue.
+These three components work together to create this addon.\
+`EVENT`s are executed in order and will execute every `_process()` call if they aren't finished on first execution.\
+Once an `EVENT` returns that it's finished, it removes that event from the queue and executes the next event in the queue.
 
-This is helpful for executing things in sequence, but not immediately. In my time I've used it for everything from managing level loading,\
-scene transitions, dialogue and basically executing cutscenes.
+This is helpful for executing things in sequence, but not immediately.\
+In my time I've used it for everything from managing level loading, scene transitions, dialogue and executing cutscenes.
 
-The main thing that makes this all useful is that the queue waits for a response from the currently executing event. Until it recieves either a\
-`EVENT.RETURNTYPE.FINISHED` or `EVENT.RETURNTYPE.ERROR`, it will continuously execute that event every `_process()`.
+The main thing that makes this so useful is that the queue waits for a response from the currently executing event. Until it recieves either a\
+`EVENT.RETURNTYPE.FINISHED` or `EVENT.RETURNTYPE.ERROR`, it will execute that event every `_process()`.
 
 ## Examples
 
-Here's an example from one of my projects, because of how I title these it probably doesn't take much to figure out what each `EVENT`'s functionality is.
+Here's an example from one of my projects, because of how I title these it probably doesn't take much to figure out what each `EVENT`s functionality is.
 
 ```gdscript
 func set_level( levelID : String, target_door : String = "" ) -> void:
@@ -69,30 +69,30 @@ All to say, I've included and iterrated on these scripts turned addon over the y
 ## The First Step
 
 After [installation](#how-to-install), you're pretty much set up and ready to get going.\
-By default, `LovelyEvent` has a single event queue called the "main" event queue. this queue is what events are sent to by default.
+By default, `LovelyEvent` has a single event queue called the `LovelyEvent.main_queue` event queue. this queue is what events are sent to by default.
 
-To start out, you can call an event via their Class name, eg.
+To start out, you call an event via their Class name, eg.
 
 ```gdscript
 EVENT_print.new( "example text!" ).queue()
 ```
 
 This queues an event into the event queue. but there's more than one way to queue an event.\
-You can queue an event from `EVENT`, `EventQueue` or even from `LovelyEvent`.
+You can queue an event from `EVENT`, `EventQueue` or even from directly `LovelyEvent` eg.
 
 ```gdscript
-# queueing from EVENT
+# queueing an EVENT
 EVENT_example.new().queue()
 
-# queueing from EventQueue
+# queueing an EVENT from an EventQueue
 example_queue.queue( EVENT_example.new() )
 
-# queueing from LovelyEvent
+# queueing an EVENT from LovelyEvent
 LovelyEvent.queue( EVENT_example.new() )
 ```
 
-By default, calling queue from `LovelyEvent` or `EVENT` sends the event into the default queue, which is `LovelyEvent.main_queue`.\
-To specify which queue to send the event to, it's as simple as: 
+If no queue is specified when calling `.queue()` from `LovelyEvent` or `EVENT` sends the event into the default queue, which is `LovelyEvent.main_queue`.\
+To specify which queue to send the event to, it's as simple as:
 
 ```gdscript
 # queues into the EventQueue "example_queue"
@@ -117,17 +117,22 @@ func example_queue_check_replacer( new_event : EVENT ) -> bool:
 LovelyEvent.default_queue_check = example_queue_check_replacer
 ```
 
-This replaces the default check function (which does nothing) and allows you to interject and have events by default queue into a different `EventQueue`.
+> [!NOTE]
+> Any function replacing `LovelyEvent.default_queue_check` **MUST** return a bool.\
+> returning `true` means the event was queued into a different queue.\
+> returning `false` means the event was not queued and will be queued into `LovelyEvent.main_queue`. 
 
-Can't find that `EventQueue` you created? have no fear! you can call this to get an `EventQueue` by "ID":
+This replaces the default check function and allows you to interject and have events by default queue into a different `EventQueue`.
+
+Can't find that `EventQueue` you created? have no fear! you can call this to get an `EventQueue` by its `ID`:
 
 ```gdscript
-LovelyEvent.get_queue_by_ID( "exampleID" )
+var that_one_queue : EventQueue = LovelyEvent.get_queue_by_ID( "exampleID" )
 ```
 
-What about pausing events? simple, set `LovelyEvent.pause` to true!
+What about pausing all `EventQueues` at once? simple, set `LovelyEvent.pause_all` to true!
 
-For some reason need to manually delete a queue? `LovelyEvent.delete_queue()` will get that job done for you.
+Need to manually delete a queue? `LovelyEvent.delete_queue()` will get that job done for you.
 
 ## Creating and Using a Queue
 
@@ -143,19 +148,25 @@ Let's start with creating an `EventQueue`. There's Three main types.
 Now, let's create a queue!
 
 ```gdscript
-var queue_example := EventQueue.new( "exampleID", false, false )
+var queue_example := EventQueue.new( "exampleID" )
 ```
 
-And there you have it. simply feed it an `ID` and whether it will run while `LovelyEvent.pause` is true and and if it shouldn't pause its queue while `LovelyEvent.main_queue` is running? set that to true!\
-But there's more! Don't want your `EventQueue` to be deleted accidentally via `LovelyEvent.delete_queue`? set `EventQueue.is_essential` to be true!
+And there you have it. simply feed it an `ID` and that's that.
+There's also two optional parameters, like `run_while_pause_all` which allows the queue to keep running while `LovelyEvent.pause_all` is true.\
+Or, if it shouldn't pause its queue while `LovelyEvent.main_queue` is running? set `run_with_main_queue` to true.\
+
+Additional variables you can set per `EventQueue` include:
+- `EventQueue.pause` pauses the individual `EventQueue`.
+- `EventQueue.is_essential` which disables deletion of the queue from `LovelyEvent.delete_queue`/`LovelyEvent.delete_queue_by_ID` and `EventQueue.delete`.
+- `ignore_main_queue` can be set at init, or individually for the same effect.
+- `runs_while_pause_all` can be set at init, or individually for the same effect.
 
 > [!NOTE]
 > when creating a new `EventQueue`, it must have a unique ID! otherwise it *will* overwrite any `EventQueue` of the same name!
 
-What if you want to check if something else is running or should stop an event from running? try out:
+What if you want to check if something else is running or should stop an event from running? try `EventQueue.add_update_check` out:
 
 ```gdscript
-# all check functions need to return a bool.
 func example_check() -> bool:
 	if example_thing == true:
 		return false
@@ -164,7 +175,12 @@ func example_check() -> bool:
 example_queue.add_update_check( example_check )
 ```
 
-Now, before every update, it will run this given function, if it returns true it means it passed the check and can `update()`.
+> [!NOTE]
+> all checks added must return a `bool`\
+> returning `true` if the `EventQueue` can update.
+> returning `false` if the `EventQueue` shoulnd't update.
+
+Now, before every update, it will run any given function(s) to determine if it should update or not.
 
 Need to remove the current, or a specific event within the `EventQueue`'s queue? `EventQueue.remove_top_event()` and `EventQueue.remove_specific_event()` has you covered.\
 Need the entire queue to be cleared? `EventQueue.clear()` exists for that exact reason!
@@ -172,8 +188,8 @@ Need the entire queue to be cleared? `EventQueue.clear()` exists for that exact 
 And, finally. If you want to check if an `EventQueue` is currently running or empty..? you guessed it. `EventQueue.is_running` and `EventQueue.is_empty` are, in fact, a thing.
 
 > [!CAUTION]
-> The one thing I ask of you. **DO NOT** call `EventQueue.update()`! This function is automatically called from the global singleton `LovelyEvent` within its process event.
-> it does not and should not be called outside of that.
+> The one thing I ask of you. **DO NOT** call `EventQueue.update()`! This function is automatically called from the global singleton `LovelyEvent` within its process event.\
+> it should not be called outside of that.
 
 ## Events! Events! Events!
 
