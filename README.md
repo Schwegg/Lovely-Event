@@ -149,6 +149,9 @@ var queue_example := EventQueue.new( "exampleID", false, false )
 And there you have it. simply feed it an `ID` and whether it will run while `LovelyEvent.pause` is true and and if it shouldn't pause its queue while `LovelyEvent.main_queue` is running? set that to true!\
 But there's more! Don't want your `EventQueue` to be deleted accidentally via `LovelyEvent.delete_queue`? set `EventQueue.is_essential` to be true!
 
+> [!NOTE]
+> when creating a new `EventQueue`, it must have a unique ID! otherwise it *will* overwrite any `EventQueue` of the same name!
+
 What if you want to check if something else is running or should stop an event from running? try out:
 
 ```gdscript
@@ -168,7 +171,9 @@ Need the entire queue to be cleared? `EventQueue.clear()` exists for that exact 
 
 And, finally. If you want to check if an `EventQueue` is currently running or empty..? you guessed it. `EventQueue.is_running` and `EventQueue.is_empty` are, in fact, a thing.
 
-The one thing I ask of you. **DO NOT** call `EventQueue.update()` this is automatically called from the global singleton `LovelyEvent` within its process event.
+> [!CAUTION]
+> The one thing I ask of you. **DO NOT** call `EventQueue.update()`! This function is automatically called from the global singleton `LovelyEvent` within its process event.
+> it does not and should not be called outside of that.
 
 ## Events! Events! Events!
 
