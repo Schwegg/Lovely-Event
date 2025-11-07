@@ -30,7 +30,6 @@ func _enable_plugin() -> void:
 	add_custom_type( "TempEventQueue", "RefCounted", q_temp_event_queue, node_icon );
 	# add singleton
 	add_autoload_singleton( "LovelyEvent", "res://addons/lovely_event/scripts/LovelyEvent.gd" );
-	print("LovelyEvent: be sure to check the github repository for documentation!");
 
 
 func _disable_plugin() -> void:
