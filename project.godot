@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Lovely Event"
+run/main_scene="uid://bs7fdpjxxfvoq"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="uid://d144be20fw7cg"
 

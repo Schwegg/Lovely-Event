@@ -16,3 +16,4 @@ data_*/
 mono_crash.*.json
 
 *.uid
+main_scene.tscn
