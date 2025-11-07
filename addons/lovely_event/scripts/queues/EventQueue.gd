@@ -4,7 +4,11 @@ extends RefCounted
 ## via [LovelyEvent] global singleton.
 class_name EventQueue
 
+## just an error message for internal use.
+const err_queueOfIDExists = "EventQueue \"%s\" already exists! try a different name!";
+
 var name : String = ""; ## name/ID of [EventQueue].
+var pause : bool = false; ## pauses the specified [EventQueue].
 var is_empty : bool = true; ## shows if [member event_queue] is empty.
 var is_looping : bool = false; ## if current event within queue is being run for more than one [method _process].
 var is_running : bool = false; ## shows whether [EVENT]s are being run in this queue or not.
@@ -12,21 +16,21 @@ var is_essential : bool = false; ## cannot be deleted via [method LovelyEvent.de
 var event_queue : Array[ EVENT ] = []; ## queue for events.
 
 var ignore_main_queue : bool = false; ## sets whether queue runs along-side the main queue or not.
-var runs_while_paused : bool = false; ## sets whether queue runs while [LovelyEvent] is paused.
+var runs_while_pause_all : bool = false; ## sets whether queue runs while [LovelyEvent] is paused.
 
 ## checks this [Array] of [Callable]s before updating.[br]
 ## see: [method EventQueue.add_update_check].
 var extra_checks : Array[Callable] = [];
 
 
-func _init( queue_name : String, run_while_paused : bool = false, run_while_main_queue_runs : bool = false ) -> void:
-	name = queue_name;
-	runs_while_paused = run_while_paused;
-	ignore_main_queue = run_while_main_queue_runs;
-	if not LovelyEvent.queue_list.has( queue_name ):
-		LovelyEvent.queue_list[queue_name] = self;
+func _init( queue_ID : String, run_while_pause_all : bool = false, run_with_main_queue : bool = false ) -> void:
+	name = queue_ID;
+	runs_while_pause_all = run_while_pause_all;
+	ignore_main_queue = run_with_main_queue;
+	if not LovelyEvent.queue_list.has( queue_ID ):
+		LovelyEvent.queue_list[queue_ID] = self;
 	else:
-		push_error( "EventQueue \"",name,"\" already exists! try a different name!" );
+		push_error( err_queueOfIDExists % name );
 
 
 ## [Callable] must return [code]bool[/code].
@@ -55,7 +59,9 @@ func check_main_queue_check() -> bool:
 
 ## internal check for [method EventQueue.check_can_update].
 func check_pause_check() -> bool:
-	if (not LovelyEvent.pause) or (runs_while_paused and LovelyEvent.pause):
+	if not pause:
+		return true;
+	if (not LovelyEvent.pause) or (runs_while_pause_all and LovelyEvent.pause):
 		return true;
 	return false;
 
@@ -120,3 +126,10 @@ func clear() -> void:
 	event_queue.clear();
 	is_empty = true;
 	is_running = false;
+
+
+func delete() -> void:
+	if not is_essential:
+		LovelyEvent.delete_queue( self );
+	else:
+		push_error( LovelyEvent.err_cannotDeleteEssentialQueue );

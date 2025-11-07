@@ -1,9 +1,14 @@
 extends Node
 
+## just an error message for internal use.
+const err_couldntFindQueueOfID = "couldn't find event queue of ID \"%s\"";
+## just an error message for internal use.
+const err_cannotDeleteEssentialQueue = "cannot delete essential event queue. if you want to delete this queue, set the queue's is_essential var to false.";
+
 var main_queue : EventQueue;
 var queue_list : Dictionary[String,EventQueue] = {};
 
-var pause : bool = false;
+var pause_all : bool = false;
 
 ## does nothing by default.[br]
 ## set with [Callable] to replace.
@@ -55,7 +60,7 @@ func queue( new_event : EVENT, event_queue : EventQueue = null ) -> void:
 func get_queue_by_ID( queue_id : String ) -> EventQueue:
 	if queue_list.has( queue_id ):
 		return queue_list[queue_id];
-	push_error( "couldn't find event queue of ID \"",queue_id,"\"" );
+	push_error( err_couldntFindQueueOfID % queue_id );
 	return null;
 
 ## deletes queue from [member queue_list], unless [EventQueue].is_essential is true.
@@ -64,4 +69,16 @@ func delete_queue( event_queue : EventQueue ) -> void:
 		event_queue.clear();
 		queue_list.erase( event_queue );
 	else:
-		push_error( "cannot delete essential event queue. if you want to delete this queue, set the queue's is_essential var to false." );
+		push_error( err_cannotDeleteEssentialQueue );
+
+
+func delete_queue_by_ID( queue_id : String ) -> void:
+	if queue_list.has( queue_id ):
+		var event_queue = queue_list[queue_id];
+		if not event_queue.is_essential:
+			event_queue.clear();
+			queue_list.erase( event_queue );
+		else:
+			push_error( err_cannotDeleteEssentialQueue );
+	else:
+		push_error( err_couldntFindQueueOfID % queue_id );
