@@ -1,6 +1,6 @@
 # Lovely Event
 
-A light-weight but flexible **event system** addo-on for Godot based off my original Love2D event system, hence the name!
+A light-weight but flexible **event system** add-on for Godot based off my original Love2D event system, hence the name!
 
 ## Backstory
 
