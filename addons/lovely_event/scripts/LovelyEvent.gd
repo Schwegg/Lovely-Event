@@ -44,7 +44,7 @@ func _process( _dt : float ) -> void:
 ## check for the default queue to send [param new_event] to, which is 
 ## [member main_queue] by default.
 func queue( new_event : EVENT, event_queue : EventQueue = null ) -> void:
-	if queue == null:
+	if event_queue == null:
 		var has_queued_event : bool = default_queue_check.call( new_event );
 		if not has_queued_event:
 			main_queue.queue( new_event );
