@@ -24,7 +24,7 @@ var default_queue_check : Callable;
 
 func _init() -> void:
 	process_mode = PROCESS_MODE_ALWAYS;
-	default_queue_check = default_queue_check_func;
+	default_queue_check = func() -> bool: return false;
 
 
 func _ready() -> void:
@@ -52,9 +52,11 @@ func queue( new_event : EVENT, event_queue : EventQueue = null ) -> void:
 		event_queue.queue( new_event );
 
 
-## does nothing by default. expected to be replaced via replacing [member LovelyEvent.default_queue_check].
-func default_queue_check_func( _new_event : EVENT ) -> bool:
-	return false;
+func get_queue_by_ID( queue_id : String ) -> EventQueue:
+	if queue_list.has( queue_id ):
+		return queue_list[queue_id];
+	push_error( "couldn't find event queue of ID \"",queue_id,"\"" );
+	return null;
 
 ## deletes queue from [member queue_list], unless [EventQueue].is_essential is true.
 func delete_queue( event_queue : EventQueue ) -> void:
