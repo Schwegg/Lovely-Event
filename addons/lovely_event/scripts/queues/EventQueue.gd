@@ -101,7 +101,7 @@ func remove_top_event() -> void:
 		event_queue[0].is_current_event = false;
 		event_queue.remove_at( 0 );
 	is_empty = event_queue.is_empty();
-	if not event_queue.is_empty():
+	if not is_empty:
 		update( LovelyEvent.get_process_delta_time() );
 
 
