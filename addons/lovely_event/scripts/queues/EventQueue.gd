@@ -76,11 +76,12 @@ func queue( event : EVENT ) -> void:
 ## it's called automatically via [method LovelyEvent._process] function!
 func update( _dt : float ) -> void:
 	is_empty = event_queue.is_empty();
-	# checks if queue can update
-	if not check_can_update(): return;
-	is_running = true;
-	# if it can, updates
+	# checks if empty first.
 	if not event_queue.is_empty():
+		# checks if queue can update
+		if not check_can_update(): return;
+		# if it can, updates
+		is_running = true;
 		event_queue[0].is_current_event = true;
 		var event_return_type : EVENT.RETURNTYPE = event_queue[0].execute( is_looping, _dt );
 		if event_return_type == EVENT.RETURNTYPE.UNFINISHED:
@@ -109,6 +110,8 @@ func remove_top_event() -> void:
 	is_empty = event_queue.is_empty();
 	if not is_empty:
 		update( LovelyEvent.get_process_delta_time() );
+	else:
+		is_running = false;
 
 
 ## removes specific event from the [member event_queue].
