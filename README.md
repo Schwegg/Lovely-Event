@@ -1,3 +1,5 @@
+<div align="center"><img src="/icon.png" /></div>
+
 # Lovely Event
 
 A light-weight but flexible **event sequencer** add-on for Godot based off my original Love2D event sequencer system, hence the name!
