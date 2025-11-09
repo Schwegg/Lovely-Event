@@ -131,6 +131,13 @@ func clear() -> void:
 	is_running = false;
 
 
+func has_event_type_queued( event_class_type : Variant ) -> bool:
+	for event in event_queue:
+		if is_instance_of( event, event_class_type ):
+			return true;
+	return false;
+
+
 func delete() -> void:
 	if not is_essential:
 		LovelyEvent.delete_queue( self );
