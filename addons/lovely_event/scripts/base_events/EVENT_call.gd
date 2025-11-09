@@ -3,7 +3,7 @@ extends EVENT
 class_name EVENT_call
 
 var call_function : Callable;
-var call_vars : Array;
+var call_vars : Array = [];
 
 ## calls [param function] with given [param variables] on execute.
 func _init( function : Callable, ...variables ) -> void:
@@ -14,7 +14,7 @@ func _init( function : Callable, ...variables ) -> void:
 
 
 func execute( _looping : bool, _dt : float ) -> RETURNTYPE:
-	if call_vars != null:
+	if call_vars.is_empty():
 		call_function.callv( call_vars );
 	else:
 		call_function.call();
