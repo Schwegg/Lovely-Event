@@ -14,7 +14,7 @@ func _init( function : Callable, ...variables ) -> void:
 
 
 func execute( _looping : bool, _dt : float ) -> RETURNTYPE:
-	if call_vars.is_empty():
+	if not call_vars.is_empty():
 		call_function.callv( call_vars );
 	else:
 		call_function.call();
